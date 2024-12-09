@@ -1,69 +1,29 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export function RecentSales() {
+type RecentSalesProps = {
+  top10Processes: { name: string; count: number }[];
+};
+
+export function RecentSales({ top10Processes }: RecentSalesProps) {
   return (
-    <div className="space-y-8">
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/01.png" alt="Avatar" />
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Aprova</p>
-          <p className="text-sm text-muted-foreground">
-            Licença para Construção
-          </p>
-        </div>
-        <div className="ml-auto font-medium">563</div>
+    <ScrollArea className="h-[250px] w-full pr-4">
+      <div className="space-y-4">
+        {top10Processes.map((process, index) => (
+          <div 
+            className="flex items-center border-b pb-3 last:border-b-0" 
+            key={index}
+          >
+            <Avatar className="h-9 w-9">
+              <AvatarFallback>{process.name[0]}</AvatarFallback>
+            </Avatar>
+            <div className="ml-4 space-y-1 flex-grow">
+              <p className="text-sm font-medium leading-none">{process.name}</p>
+            </div>
+            <div className="ml-auto font-medium">{process.count}</div>
+          </div>
+        ))}
       </div>
-      <div className="flex items-center">
-        <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
-          <AvatarImage src="/avatars/02.png" alt="Avatar" />
-          <AvatarFallback>JL</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Aprova</p>
-          <p className="text-sm text-muted-foreground">
-            Certidão de Uso e Ocupação do Solo
-          </p>
-        </div>
-        <div className="ml-auto font-medium">255</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/03.png" alt="Avatar" />
-          <AvatarFallback>IN</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Aprova</p>
-          <p className="text-sm text-muted-foreground">Alvará de Demolição</p>
-        </div>
-        <div className="ml-auto font-medium">204</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/04.png" alt="Avatar" />
-          <AvatarFallback>WK</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Aprova</p>
-          <p className="text-sm text-muted-foreground">Pré-Análise</p>
-        </div>
-        <div className="ml-auto font-medium">97</div>
-      </div>
-      <div className="flex items-center">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src="/avatars/05.png" alt="Avatar" />
-          <AvatarFallback>SD</AvatarFallback>
-        </Avatar>
-        <div className="ml-4 space-y-1">
-          <p className="text-sm font-medium leading-none">Aprova</p>
-          <p className="text-sm text-muted-foreground">
-            Substituição de Plantas
-          </p>
-        </div>
-        <div className="ml-auto font-medium">97</div>
-      </div>
-    </div>
+    </ScrollArea>
   );
 }

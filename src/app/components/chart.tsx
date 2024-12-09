@@ -18,52 +18,42 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-];
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
+type ChartProps = {
+  chartData: { name: string; value: number }[];
+};
 
-export function Chart() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+export function Chart({ chartData }: ChartProps) {
+  // Mapear os dados do gráfico para o formato do Recharts
+  const rechartsData = chartData.map((item) => ({
+    ...item,
+    fill: item.name === "Deferidos" 
+      ? "hsl(var(--chart-2))" 
+      : "hsl(var(--chart-1))"
+  }));
+
+  const chartConfig = {
+    deferidos: {
+      label: "Deferidos",
+      color: "hsl(var(--chart-2))",
+    },
+    indeferidos: {
+      label: "Indeferidos",
+      color: "hsl(var(--chart-1))",
+    },
+  } satisfies ChartConfig;
+
+  const totalProcessos = React.useMemo(() => {
+    return rechartsData.reduce((acc, curr) => acc + curr.value, 0);
+  }, [rechartsData]);
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Análise de dados do Aprova </CardTitle>
-        <CardDescription>Ano 2024</CardDescription>
+    <Card className="flex flex-col border-none">
+      <CardHeader className="items-center pb-0 border-none">
+        <CardTitle>Análise de Processos</CardTitle>
+        <CardDescription>Dados de Maio a Outubro</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
+      <CardContent className="flex-1 pb-0 border-none">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
@@ -74,9 +64,9 @@ export function Chart() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              data={rechartsData}
+              dataKey="value"
+              nameKey="name"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -95,7 +85,7 @@ export function Chart() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalProcessos.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -115,10 +105,10 @@ export function Chart() {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Crescimento de 5.2% neste mês <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Exibindo dados de processos dos últimos 6 meses
         </div>
       </CardFooter>
     </Card>
